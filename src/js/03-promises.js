@@ -8,23 +8,38 @@ const refs = {
 }
 
 form.addEventListener("submit", onFormSubmit);
-
-
+ 
 function onFormSubmit(event) {
-  console.log("escfneksnfclen");
   event.preventDefault();
 
+  let firstDelay = Number(refs.inputFirstDelay.value);
+  let delayStep = Number(refs.inputDelayStep.value);
+  let amount =  Number(refs.inputAmount.value);
 
-  let firstDelay = refs.inputFirstDelay.value;
-  
-  console.log(firstDelay);
-}
- 
-function createPromise(position, delay) {
-  const shouldResolve = Math.random() > 0.3;
-  if (shouldResolve) {
-    // Fulfill
-  } else {
-    // Reject
+  for(let i = 0; i < amount; i++){
+    createPromise(i, firstDelay);
+    firstDelay += delayStep;
   }
 }
+
+function createPromise(position, delay) {
+  const shouldResolve = Math.random() > 0.3;
+  
+  const promise = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if(shouldResolve){
+        resolve();
+      } else {
+        reject();
+      }
+    }, delay);
+  });
+    promise.then(() => {
+      `${Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`)}`;
+    })
+    .catch(() => {
+      `${Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`)}`;
+    });
+}
+
+
